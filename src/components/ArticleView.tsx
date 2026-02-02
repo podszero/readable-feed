@@ -4,10 +4,11 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatDistanceToNow, format } from "date-fns";
 import {
-  X,
+  ArrowLeft,
   ExternalLink,
   Star,
   BookOpen,
+  Share2,
 } from "lucide-react";
 
 interface ArticleViewProps {
@@ -23,13 +24,26 @@ export function ArticleView({
   isStarred,
   onToggleStarred,
 }: ArticleViewProps) {
+  const handleShare = async () => {
+    if (article && navigator.share) {
+      try {
+        await navigator.share({
+          title: article.title,
+          url: article.link,
+        });
+      } catch (e) {
+        // User cancelled or error
+      }
+    }
+  };
+
   if (!article) {
     return (
       <div className="flex-1 flex items-center justify-center bg-background">
-        <div className="text-center text-muted-foreground">
-          <BookOpen className="h-12 w-12 mx-auto mb-4 opacity-50" />
-          <p className="text-lg">Select an article to read</p>
-          <p className="text-sm mt-1">Choose from the list on the left</p>
+        <div className="text-center text-muted-foreground p-8">
+          <BookOpen className="h-16 w-16 mx-auto mb-6 opacity-40" />
+          <p className="text-xl font-medium mb-2">Select an article to read</p>
+          <p className="text-sm">Choose from the list on the left</p>
         </div>
       </div>
     );
@@ -39,41 +53,51 @@ export function ArticleView({
   const timeAgo = formatDistanceToNow(article.pubDate, { addSuffix: true });
 
   return (
-    <div className="flex-1 flex flex-col bg-background animate-slide-in-right">
+    <div className="flex-1 flex flex-col bg-background animate-slide-in-right min-w-0">
       {/* Header */}
-      <header className="flex items-center justify-between p-3 border-b border-border bg-card">
-        <div className="flex items-center gap-2">
+      <header className="flex items-center justify-between p-2 sm:p-3 border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-10">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
           <Button
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="md:hidden h-8 w-8"
+            className="md:hidden h-10 w-10 flex-shrink-0"
           >
-            <X className="h-4 w-4" />
+            <ArrowLeft className="h-5 w-5" />
           </Button>
-          <span className="text-sm text-muted-foreground truncate max-w-[200px]">
+          <span className="text-sm text-muted-foreground truncate">
             {article.feedTitle}
           </span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 flex-shrink-0">
           <Button
             variant="ghost"
             size="icon"
             onClick={onToggleStarred}
-            className="h-8 w-8"
+            className="h-10 w-10 sm:h-9 sm:w-9"
           >
             <Star
               className={cn(
-                "h-4 w-4",
+                "h-5 w-5 sm:h-4 sm:w-4",
                 isStarred ? "fill-primary text-primary" : "text-muted-foreground"
               )}
             />
           </Button>
+          {typeof navigator.share === 'function' && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleShare}
+              className="h-10 w-10 sm:h-9 sm:w-9"
+            >
+              <Share2 className="h-5 w-5 sm:h-4 sm:w-4" />
+            </Button>
+          )}
           <Button
             variant="ghost"
             size="icon"
             asChild
-            className="h-8 w-8"
+            className="h-10 w-10 sm:h-9 sm:w-9"
           >
             <a
               href={article.link}
@@ -81,7 +105,7 @@ export function ArticleView({
               rel="noopener noreferrer"
               title="Open in new tab"
             >
-              <ExternalLink className="h-4 w-4" />
+              <ExternalLink className="h-5 w-5 sm:h-4 sm:w-4" />
             </a>
           </Button>
         </div>
@@ -89,24 +113,24 @@ export function ArticleView({
 
       {/* Content */}
       <ScrollArea className="flex-1">
-        <article className="max-w-3xl mx-auto p-6 md:p-8 lg:p-12">
+        <article className="max-w-2xl mx-auto px-4 py-6 sm:px-6 sm:py-8 md:px-8 lg:px-12 lg:py-10">
           {/* Title */}
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-4 text-article-title">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-4 text-article-title">
             {article.title}
           </h1>
 
           {/* Meta */}
-          <div className="flex flex-wrap items-center gap-2 text-sm text-article-meta mb-8 pb-6 border-b border-border">
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-article-meta mb-6 sm:mb-8 pb-4 sm:pb-6 border-b border-border">
             {article.author && (
               <>
                 <span className="font-medium">{article.author}</span>
-                <span>·</span>
+                <span className="hidden sm:inline">·</span>
               </>
             )}
-            <time dateTime={article.pubDate.toISOString()} title={formattedDate}>
+            <time dateTime={article.pubDate.toISOString()} title={formattedDate} className="block sm:inline">
               {timeAgo}
             </time>
-            <span>·</span>
+            <span className="hidden sm:inline">·</span>
             <a
               href={article.link}
               target="_blank"

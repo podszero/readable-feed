@@ -38,20 +38,20 @@ export function ArticleList({
   loadingProgress,
 }: ArticleListProps) {
   return (
-    <div className="flex flex-col h-full bg-background border-r border-border w-full md:w-80 lg:w-96">
+    <div className="flex flex-col h-full bg-background border-r border-border w-full sm:w-80 md:w-72 lg:w-80 xl:w-96">
       {/* Header */}
-      <div className="p-3 border-b border-border space-y-3">
+      <div className="p-3 sm:p-4 border-b border-border space-y-3">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search articles..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-9 bg-muted/50 border-0 focus-visible:ring-1"
+            className="pl-9 bg-muted/50 border-0 focus-visible:ring-1 h-10 sm:h-9"
           />
         </div>
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground">
+          <span className="text-xs sm:text-sm text-muted-foreground">
             {isLoading
               ? `Loading... ${loadingProgress.current}/${loadingProgress.total}`
               : `${articles.length} articles`}
@@ -60,10 +60,11 @@ export function ArticleList({
             variant="ghost"
             size="sm"
             onClick={onMarkAllRead}
-            className="text-xs h-7"
+            className="text-xs h-8 sm:h-7 px-2 sm:px-3"
           >
             <CheckCheck className="h-3.5 w-3.5 mr-1" />
-            Mark all read
+            <span className="hidden xs:inline">Mark all read</span>
+            <span className="xs:hidden">Read all</span>
           </Button>
         </div>
       </div>
@@ -71,7 +72,7 @@ export function ArticleList({
       {/* Article List */}
       <ScrollArea className="flex-1">
         {isLoading && articles.length === 0 ? (
-          <div className="p-4 space-y-3">
+          <div className="p-4 space-y-4">
             {[...Array(5)].map((_, i) => (
               <div key={i} className="animate-pulse space-y-2">
                 <div className="h-4 bg-muted rounded w-3/4" />
@@ -82,7 +83,8 @@ export function ArticleList({
           </div>
         ) : articles.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground">
-            <p>No articles found</p>
+            <p className="text-base">No articles found</p>
+            <p className="text-sm mt-1">Try a different search or filter</p>
           </div>
         ) : (
           <div className="divide-y divide-border">
@@ -127,15 +129,15 @@ function ArticleRow({
     <article
       onClick={onSelect}
       className={cn(
-        "p-3 cursor-pointer transition-colors group animate-fade-in",
-        isSelected ? "bg-accent" : "hover:bg-muted/50",
+        "p-3 sm:p-4 cursor-pointer transition-colors group animate-fade-in",
+        isSelected ? "bg-accent" : "hover:bg-muted/50 active:bg-muted/70",
         !isRead && "border-l-2 border-l-unread"
       )}
     >
-      <div className="flex items-start gap-2">
+      <div className="flex items-start gap-3">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs text-article-meta truncate">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="text-xs text-article-meta truncate max-w-[120px] sm:max-w-[150px]">
               {article.feedTitle}
             </span>
             <span className="text-xs text-article-meta">·</span>
@@ -145,24 +147,25 @@ function ArticleRow({
           </div>
           <h3
             className={cn(
-              "text-sm leading-snug mb-1 line-clamp-2",
+              "text-sm sm:text-[15px] leading-snug mb-1.5 line-clamp-2",
               isRead ? "text-article-excerpt" : "text-article-title font-medium"
             )}
           >
             {article.title}
           </h3>
-          <p className="text-xs text-article-excerpt line-clamp-2">
+          <p className="text-xs sm:text-sm text-article-excerpt line-clamp-2 leading-relaxed">
             {article.excerpt}
           </p>
         </div>
         
-        {/* Thumbnail */}
+        {/* Thumbnail - larger on mobile for touch */}
         {article.imageUrl && (
-          <div className="flex-shrink-0 w-16 h-16 rounded overflow-hidden bg-muted">
+          <div className="flex-shrink-0 w-16 h-16 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-lg overflow-hidden bg-muted">
             <img
               src={article.imageUrl}
               alt=""
               className="w-full h-full object-cover"
+              loading="lazy"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = "none";
               }}
@@ -170,20 +173,21 @@ function ArticleRow({
           </div>
         )}
 
-        {/* Star button */}
+        {/* Star button - always visible on mobile */}
         <button
           onClick={(e) => {
             e.stopPropagation();
             onToggleStarred();
           }}
           className={cn(
-            "p-1 rounded opacity-0 group-hover:opacity-100 transition-opacity",
+            "p-2 -mr-1 rounded-lg transition-all touch-manipulation",
+            "sm:opacity-0 sm:group-hover:opacity-100",
             isStarred && "opacity-100"
           )}
         >
           <Star
             className={cn(
-              "h-4 w-4",
+              "h-5 w-5 sm:h-4 sm:w-4",
               isStarred
                 ? "fill-primary text-primary"
                 : "text-muted-foreground hover:text-primary"

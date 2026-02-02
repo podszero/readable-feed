@@ -59,13 +59,13 @@ const Index = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden">
+    <div className="h-[100dvh] flex flex-col overflow-hidden bg-background">
       {/* Mobile Header */}
       <MobileHeader onOpenSidebar={() => setMobileSidebarOpen(true)} />
 
       <div className="flex-1 flex overflow-hidden">
         {/* Desktop Sidebar */}
-        <div className="hidden md:flex">
+        <div className="hidden md:flex h-full">
           <FeedSidebar
             feeds={feeds}
             selectedFeedId={selectedFeedId}
@@ -83,7 +83,7 @@ const Index = () => {
 
         {/* Mobile Sidebar Sheet */}
         <Sheet open={mobileSidebarOpen} onOpenChange={setMobileSidebarOpen}>
-          <SheetContent side="left" className="p-0 w-72">
+          <SheetContent side="left" className="p-0 w-[280px] sm:w-80">
             <FeedSidebar
               feeds={feeds}
               selectedFeedId={selectedFeedId}
@@ -103,7 +103,7 @@ const Index = () => {
         {/* Article List - Hidden on mobile when viewing article */}
         <div
           className={cn(
-            "flex-shrink-0",
+            "flex-shrink-0 h-full",
             showArticleList ? "flex" : "hidden md:flex"
           )}
         >
@@ -125,7 +125,7 @@ const Index = () => {
         {/* Article View - Full width on mobile when showing */}
         <div
           className={cn(
-            "flex-1 min-w-0",
+            "flex-1 min-w-0 h-full",
             !showArticleList ? "flex" : "hidden md:flex"
           )}
         >
