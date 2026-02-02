@@ -53,9 +53,9 @@ export function ArticleView({
   const timeAgo = formatDistanceToNow(article.pubDate, { addSuffix: true });
 
   return (
-    <div className="flex-1 flex flex-col bg-background animate-slide-in-right min-w-0">
+    <div className="flex-1 flex flex-col bg-background animate-slide-in-right min-w-0 w-full overflow-hidden">
       {/* Header */}
-      <header className="flex items-center justify-between p-2 sm:p-3 border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-10">
+      <header className="flex items-center justify-between p-2 sm:p-3 border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-10 flex-shrink-0">
         <div className="flex items-center gap-2 min-w-0 flex-1">
           <Button
             variant="ghost"
@@ -112,10 +112,10 @@ export function ArticleView({
       </header>
 
       {/* Content */}
-      <ScrollArea className="flex-1">
-        <article className="max-w-2xl mx-auto px-4 py-6 sm:px-6 sm:py-8 md:px-8 lg:px-12 lg:py-10">
+      <ScrollArea className="flex-1 w-full">
+        <article className="w-full max-w-2xl mx-auto px-4 py-6 sm:px-6 sm:py-8 md:px-8 lg:px-12 lg:py-10 overflow-hidden">
           {/* Title */}
-          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-4 text-article-title">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight mb-4 text-article-title break-words">
             {article.title}
           </h1>
 
@@ -135,7 +135,7 @@ export function ArticleView({
               href={article.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:underline"
+              className="text-primary hover:underline break-all"
             >
               View original
             </a>
@@ -143,7 +143,7 @@ export function ArticleView({
 
           {/* Body */}
           <div
-            className="prose-reader"
+            className="prose-reader w-full overflow-hidden"
             dangerouslySetInnerHTML={{ __html: sanitizeHTML(article.content) }}
           />
         </article>

@@ -59,13 +59,13 @@ const Index = () => {
   };
 
   return (
-    <div className="h-[100dvh] flex flex-col overflow-hidden bg-background">
+    <div className="h-[100dvh] flex flex-col overflow-hidden bg-background w-full max-w-full">
       {/* Mobile Header */}
       <MobileHeader onOpenSidebar={() => setMobileSidebarOpen(true)} />
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden min-w-0 w-full">
         {/* Desktop Sidebar */}
-        <div className="hidden md:flex h-full">
+        <div className="hidden md:flex h-full flex-shrink-0">
           <FeedSidebar
             feeds={feeds}
             selectedFeedId={selectedFeedId}
@@ -103,8 +103,8 @@ const Index = () => {
         {/* Article List - Hidden on mobile when viewing article */}
         <div
           className={cn(
-            "flex-shrink-0 h-full",
-            showArticleList ? "flex" : "hidden md:flex"
+            "flex-shrink-0 h-full min-w-0",
+            showArticleList ? "flex w-full md:w-auto" : "hidden md:flex"
           )}
         >
           <ArticleList
@@ -125,8 +125,8 @@ const Index = () => {
         {/* Article View - Full width on mobile when showing */}
         <div
           className={cn(
-            "flex-1 min-w-0 h-full",
-            !showArticleList ? "flex" : "hidden md:flex"
+            "flex-1 min-w-0 h-full overflow-hidden",
+            !showArticleList ? "flex w-full" : "hidden md:flex"
           )}
         >
           <ArticleView
