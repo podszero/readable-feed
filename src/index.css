@@ -132,6 +132,12 @@
     @apply leading-relaxed;
     font-size: 1rem;
     line-height: 1.8;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    max-width: 100%;
   }
 
   @media (min-width: 640px) {
@@ -150,37 +156,51 @@
   .prose-reader h1 {
     @apply text-2xl sm:text-3xl font-bold mb-4 mt-8;
     color: hsl(var(--article-title));
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .prose-reader h2 {
     @apply text-xl sm:text-2xl font-semibold mb-3 mt-6;
     color: hsl(var(--article-title));
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .prose-reader h3 {
     @apply text-lg sm:text-xl font-medium mb-2 mt-4;
     color: hsl(var(--article-title));
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .prose-reader p {
     @apply mb-4;
     color: hsl(var(--foreground));
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 
   .prose-reader a {
     @apply text-primary underline underline-offset-2 hover:text-accent transition-colors;
+    word-break: break-all;
   }
 
   .prose-reader pre {
     @apply bg-muted rounded-lg p-3 sm:p-4 overflow-x-auto my-4 text-sm;
+    max-width: 100%;
+    white-space: pre-wrap;
+    word-wrap: break-word;
   }
 
   .prose-reader code {
     @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
+    word-break: break-all;
   }
 
   .prose-reader pre code {
     @apply bg-transparent p-0;
+    word-break: normal;
   }
 
   .prose-reader blockquote {
@@ -197,15 +217,42 @@
   }
 
   .prose-reader img {
-    @apply rounded-lg max-w-full h-auto my-4;
+    @apply rounded-lg h-auto my-4;
+    max-width: 100%;
+    width: auto;
   }
 
   .prose-reader figure {
     @apply my-6;
+    max-width: 100%;
   }
 
   .prose-reader figcaption {
     @apply text-sm text-muted-foreground text-center mt-2;
+  }
+
+  .prose-reader iframe,
+  .prose-reader video,
+  .prose-reader embed,
+  .prose-reader object {
+    max-width: 100%;
+  }
+
+  .prose-reader table {
+    @apply w-full my-4 text-sm;
+    display: block;
+    overflow-x: auto;
+  }
+
+  .prose-reader th,
+  .prose-reader td {
+    @apply p-2 border border-border;
+  }
+
+  /* Prevent any element from overflowing */
+  .prose-reader * {
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
 
