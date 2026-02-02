@@ -9,6 +9,8 @@ import {
   ChevronLeft,
   RefreshCw,
   Home,
+  PanelLeftClose,
+  PanelLeft,
 } from "lucide-react";
 
 interface FeedSidebarProps {
@@ -41,53 +43,58 @@ export function FeedSidebar({
   return (
     <aside
       className={cn(
-        "flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300",
-        isCollapsed ? "w-14" : "w-64"
+        "flex flex-col bg-sidebar border-r border-sidebar-border transition-all duration-300 h-full",
+        isCollapsed ? "w-16" : "w-64 lg:w-72"
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b border-sidebar-border">
+      <div className="flex items-center justify-between p-3 lg:p-4 border-b border-sidebar-border min-h-[57px]">
         {!isCollapsed && (
           <h1 className="font-semibold text-sidebar-foreground flex items-center gap-2">
             <Rss className="h-5 w-5 text-primary" />
-            <span>RSS Reader</span>
+            <span className="text-base">RSS Reader</span>
           </h1>
         )}
         <Button
           variant="ghost"
           size="icon"
           onClick={onToggleCollapse}
-          className="h-8 w-8 text-sidebar-foreground hover:bg-sidebar-accent"
+          className={cn(
+            "h-9 w-9 text-sidebar-foreground hover:bg-sidebar-accent flex-shrink-0",
+            isCollapsed && "mx-auto"
+          )}
         >
-          <ChevronLeft
-            className={cn(
-              "h-4 w-4 transition-transform",
-              isCollapsed && "rotate-180"
-            )}
-          />
+          {isCollapsed ? (
+            <PanelLeft className="h-5 w-5" />
+          ) : (
+            <PanelLeftClose className="h-5 w-5" />
+          )}
         </Button>
       </div>
 
-      {/* Actions */}
-      <div className={cn("p-2 border-b border-sidebar-border", isCollapsed && "flex flex-col items-center")}>
+      {/* Refresh Action */}
+      <div className={cn(
+        "p-2 lg:p-3 border-b border-sidebar-border",
+        isCollapsed && "flex flex-col items-center"
+      )}>
         <Button
           variant="ghost"
           size={isCollapsed ? "icon" : "sm"}
           onClick={onRefresh}
           disabled={isLoading}
           className={cn(
-            "text-sidebar-foreground hover:bg-sidebar-accent",
+            "text-sidebar-foreground hover:bg-sidebar-accent h-10 sm:h-9",
             !isCollapsed && "w-full justify-start"
           )}
         >
           <RefreshCw className={cn("h-4 w-4", isLoading && "animate-spin", !isCollapsed && "mr-2")} />
-          {!isCollapsed && "Refresh"}
+          {!isCollapsed && "Refresh Feeds"}
         </Button>
       </div>
 
       <ScrollArea className="flex-1">
         {/* View Modes */}
-        <div className="p-2 space-y-1">
+        <div className="p-2 lg:p-3 space-y-1">
           <SidebarItem
             icon={Home}
             label="All Articles"
@@ -125,9 +132,9 @@ export function FeedSidebar({
 
         {/* Feeds */}
         {!isCollapsed && (
-          <div className="p-2">
-            <h3 className="px-2 py-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">
-              Feeds
+          <div className="p-2 lg:p-3">
+            <h3 className="px-2 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              Feeds ({feeds.length})
             </h3>
             <div className="space-y-0.5 mt-1">
               {feeds.map((feed) => (
@@ -138,16 +145,16 @@ export function FeedSidebar({
                     onViewModeChange("all");
                   }}
                   className={cn(
-                    "w-full flex items-center justify-between px-2 py-1.5 rounded-md text-sm transition-colors",
-                    "hover:bg-feed-hover",
+                    "w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-colors touch-manipulation",
+                    "hover:bg-feed-hover active:bg-sidebar-accent",
                     selectedFeedId === feed.id
                       ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
                       : "text-sidebar-foreground"
                   )}
                 >
-                  <span className="truncate">{feed.title}</span>
+                  <span className="truncate pr-2">{feed.title}</span>
                   {feed.unreadCount > 0 && (
-                    <span className="ml-2 px-1.5 py-0.5 text-xs font-medium rounded-full bg-primary text-primary-foreground">
+                    <span className="flex-shrink-0 min-w-[20px] px-1.5 py-0.5 text-xs font-medium rounded-full bg-primary text-primary-foreground text-center">
                       {feed.unreadCount}
                     </span>
                   )}
@@ -182,20 +189,20 @@ function SidebarItem({
     <button
       onClick={onClick}
       className={cn(
-        "w-full flex items-center gap-2 rounded-md transition-colors",
-        isCollapsed ? "justify-center p-2" : "px-2 py-1.5",
+        "w-full flex items-center gap-3 rounded-lg transition-colors touch-manipulation",
+        isCollapsed ? "justify-center p-2.5" : "px-3 py-2.5",
         isActive
           ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-          : "text-sidebar-foreground hover:bg-feed-hover"
+          : "text-sidebar-foreground hover:bg-feed-hover active:bg-sidebar-accent"
       )}
       title={isCollapsed ? label : undefined}
     >
-      <Icon className="h-4 w-4 flex-shrink-0" />
+      <Icon className="h-5 w-5 flex-shrink-0" />
       {!isCollapsed && (
         <>
           <span className="flex-1 text-left text-sm">{label}</span>
           {count !== undefined && count > 0 && (
-            <span className="px-1.5 py-0.5 text-xs font-medium rounded-full bg-muted text-muted-foreground">
+            <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-muted text-muted-foreground">
               {count}
             </span>
           )}
